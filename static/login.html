@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPay – Login</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14161a;--muted:#6b7280;--orange:#f26b1d;--bg:#f6f7f9;--line:#e8eaee;--red:#d93025}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Plus Jakarta Sans",Arial,sans-serif;background:linear-gradient(120deg,#fff 40%,#fde7d8);color:var(--ink);min-height:100vh;display:grid;place-items:center;padding:20px}
+.box{background:#fff;border:1px solid var(--line);border-radius:18px;padding:32px;width:100%;max-width:400px;box-shadow:0 20px 50px rgba(242,107,29,.12)}
+.logo{font-weight:800;font-size:26px}.logo b{color:var(--orange)}
+p.sub{color:var(--muted);font-size:14px;margin:6px 0 20px}
+.tabs{display:flex;gap:6px;background:var(--bg);padding:4px;border-radius:10px;margin-bottom:18px}
+.tabs button{flex:1;border:0;background:transparent;padding:10px;border-radius:8px;font:inherit;font-weight:700;cursor:pointer;color:var(--muted)}
+.tabs button.on{background:#fff;color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.1)}
+label{display:block;font-size:13px;font-weight:700;margin:12px 0 4px}
+input{width:100%;padding:12px;border:1px solid var(--line);border-radius:10px;font:inherit}
+.go{width:100%;margin-top:18px;padding:13px;border:0;border-radius:10px;background:var(--ink);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+#err{color:var(--red);font-size:14px;margin-top:12px;min-height:20px}
+.demo{margin-top:16px;background:var(--bg);border-radius:10px;padding:10px 12px;font-size:13px;color:var(--muted)}
+.demo button{border:0;background:none;color:var(--orange);font:inherit;font-weight:700;cursor:pointer;padding:0}
+#nameRow{display:none}
+</style>
+</head>
+<body>
+<div class="box">
+  <div class="logo">Agent<b>Pay</b></div>
+  <p class="sub">Log in to compare real prices from India, USA, UK, UAE and Singapore.</p>
+  <div class="tabs"><button id="tLogin" class="on" type="button">Login</button><button id="tReg" type="button">Register</button></div>
+  <div id="nameRow"><label for="name">Name</label><input id="name" autocomplete="name"></div>
+  <label for="email">Email</label><input id="email" type="email" autocomplete="email">
+  <label for="pw">Password</label><input id="pw" type="password" autocomplete="current-password" placeholder="At least 8 characters">
+  <button class="go" id="go">Login</button>
+  <div id="err" role="alert"></div>
+  <div class="demo">Demo account: demo@agentpay.com / Demo@12345 · <button id="fill" type="button">Fill it in</button></div>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let mode = "login";
+function setMode(m) {
+  mode = m;
+  $("tLogin").classList.toggle("on", m === "login"); $("tReg").classList.toggle("on", m === "register");
+  $("nameRow").style.display = m === "register" ? "block" : "none";
+  $("go").textContent = m === "register" ? "Create account" : "Login";
+  $("pw").autocomplete = m === "register" ? "new-password" : "current-password";
+  $("err").textContent = "";
+}
+$("tLogin").onclick = () => setMode("login"); $("tReg").onclick = () => setMode("register");
+$("fill").onclick = () => { setMode("login"); $("email").value = "demo@agentpay.com"; $("pw").value = "Demo@12345"; };
+async function submit() {
+  $("err").textContent = "";
+  const body = {email: $("email").value, password: $("pw").value, name: $("name").value};
+  const res = await fetch("/auth/" + mode, {method: "POST", headers: {"Content-Type": "application/json"}, body: JSON.stringify(body)});
+  const d = await res.json();
+  if (res.ok) location.href = "/"; else $("err").textContent = d.error || "Something went wrong";
+}
+$("go").onclick = submit;
+document.addEventListener("keydown", e => { if (e.key === "Enter") submit(); });
+</script>
+</body>
+</html>

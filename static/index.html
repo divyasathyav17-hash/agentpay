@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentPay – Global Purchase Agent</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#14161a;--muted:#6b7280;--orange:#f26b1d;--bg:#f6f7f9;--line:#e8eaee;--green:#1a9d55;--red:#d93025;--amber:#d98e04}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Plus Jakarta Sans",Arial,sans-serif;background:var(--bg);color:var(--ink);line-height:1.5}
+.wrap{max-width:1100px;margin:0 auto;padding:0 20px}
+.top{background:#fff;border-bottom:1px solid var(--line);font-size:13px;color:var(--muted);padding:8px 0}
+header{background:#fff;padding:14px 0}header .wrap{display:flex;justify-content:space-between;align-items:center}
+.logo{font-weight:800;font-size:24px}.logo b{color:var(--orange)}
+.hero{margin:20px 0;background:linear-gradient(120deg,#fff 40%,#fde7d8);border-radius:20px;padding:40px}
+h1{font-size:38px;line-height:1.15;font-weight:800;max-width:640px}h1 span{color:var(--orange)}
+.hero p{color:var(--muted);margin-top:8px;max-width:560px}
+form{display:flex;gap:8px;margin-top:20px;background:#fff;padding:6px;border:1px solid var(--line);border-radius:12px;max-width:680px}
+input{flex:1;border:0;outline:0;padding:12px;font:inherit;min-width:0}
+button{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 18px;cursor:pointer;background:var(--ink);color:#fff}
+button.alt{background:#fff;color:var(--ink);border:1px solid var(--line);padding:8px 14px;font-weight:500}
+:focus-visible{outline:3px solid var(--orange);outline-offset:2px}
+input[type=checkbox]{flex:none;width:18px;height:18px;padding:0;accent-color:var(--orange)}
+.real{display:flex;gap:8px;align-items:center;margin-top:12px;font-size:14px;font-weight:500}
+.chips{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+#verdict{display:none;background:var(--ink);color:#fff;border-radius:14px;padding:20px 24px;margin-top:20px}
+#vd{font-size:22px;font-weight:800;color:var(--orange)}#vr{color:#d6dae1;margin-top:4px}
+#verdict .acts{margin-top:14px;display:flex;gap:8px;flex-wrap:wrap}
+#msg{color:var(--muted);padding:14px 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-top:10px}
+.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;position:relative}
+.card.best{border:2px solid var(--orange)}.card.dim{opacity:.55}
+.badge{position:absolute;top:-12px;left:16px;background:var(--orange);color:#fff;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px}
+.flag{font-size:30px}.card h3{font-size:17px;margin-bottom:6px}
+.tr{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:8px}
+.tr.low{background:#e3f6ea;color:var(--green)}.tr.medium{background:#fdf1d8;color:var(--amber)}.tr.high{background:#fde5e3;color:var(--red)}
+.fl{font-size:12px;color:var(--red)}
+.row{display:flex;justify-content:space-between;font-size:14px;color:var(--muted);padding:5px 0;border-bottom:1px dashed var(--line)}
+.total{font-size:27px;font-weight:800;margin:12px 0 4px}.card.best .total{color:var(--green)}
+.ppbox{margin-top:10px;min-height:10px}
+h2{font-size:19px;margin:30px 0 10px}
+.panel{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px 18px;font-size:14px}
+.panel div{padding:6px 0;border-bottom:1px dashed var(--line)}.panel div:last-child{border:0}
+.drop{color:var(--green);font-weight:700}
+footer{background:var(--ink);color:#c8ccd4;padding:22px 0;font-size:13px;margin-top:36px}
+.pimg{position:relative;display:grid;place-items:center;background:#fff;overflow:hidden}
+.pimg span{font-size:48px}.pimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#fff;padding:6px}
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:12px}
+.tile{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center;cursor:pointer;font-size:13px;font-weight:500;color:var(--ink)}
+.tile:hover{border-color:var(--orange)}.tile .pimg{height:90px;margin-bottom:6px}
+#phead{display:none;background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-top:20px;gap:16px;align-items:center}
+#phead .pimg{width:120px;height:120px;border-radius:10px;flex:none}#phead h3{font-size:20px}#phead p{color:var(--muted);font-size:14px}
+.stars{color:#f5a623;font-size:14px;margin:2px 0 6px}.stars b{color:var(--ink)}.stars span{color:var(--muted);font-size:12px}
+.plat{font-size:14px;margin:4px 0}.plat a{font-size:12px;color:var(--muted)}
+.pt{display:inline-block;font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;margin-bottom:6px}
+.pt.ok{background:#e3f6ea;color:var(--green)}.pt.no{background:#fde5e3;color:var(--red)}
+.dl{font-size:13px;margin-left:6px;font-weight:700}.dl.dn{color:var(--green)}.dl.up{color:var(--red)}
+#live.on{background:var(--green);color:#fff;border-color:var(--green)}
+@media(max-width:700px){h1{font-size:28px}.hero{padding:24px}}
+</style>
+</head>
+<body>
+<div class="top"><div class="wrap">Final cost in ₹ with fees and duty · sample rates, prototype</div></div>
+<header><div class="wrap"><span class="logo">Agent<b>Pay</b></span><span>🛒</span></div></header>
+<main class="wrap">
+  <section class="hero">
+    <h1>Ask for any product. We find the <span>real price</span> and the safest seller.</h1>
+    <p>Compares India, USA, UK, UAE and Singapore, checks seller risk, predicts the price and pays with PayPal.</p>
+    <form id="f"><input id="q" list="plist" aria-label="What do you want to buy?" placeholder="e.g. Sony headphones under 40000 within 10 days"><button>Find best deal</button></form>
+    <label class="real"><input type="checkbox" id="real"> Use real prices (Google Shopping via SerpApi). Untick for demo data</label>
+    <datalist id="plist"></datalist>
+    <div class="chips" id="chips"></div>
+  </section>
+
+  <h2>Popular products</h2><div class="tiles" id="tiles"></div>
+  <div id="phead"></div>
+  <div id="verdict">
+    <div id="vd"></div><div id="vr"></div>
+    <div class="acts"><button class="alt" id="watch">Watch this price</button><button class="alt" id="live">● Live compare: OFF</button><button class="alt" id="sim">Demo: simulate price drop</button></div>
+  </div>
+  <p id="msg">Search for a product to compare sellers.</p>
+  <div class="grid" id="grid"></div>
+
+  <h2>Price drop alerts</h2><div class="panel" id="alerts">No alerts yet. Watch a product to track it.</div>
+  <h2>Transaction history</h2><div class="panel" id="tx">No payments yet.</div>
+</main>
+<footer><div class="wrap">© 2026 AgentPay · Hackathon prototype with mock sellers · PayPal sandbox</div></footer>
+
+<script>
+const $ = id => document.getElementById(id);
+const inr = n => "₹" + Math.round(n).toLocaleString("en-IN");
+const FLAG = {IN:"🇮🇳", US:"🇺🇸", UK:"🇬🇧", AE:"🇦🇪", SG:"🇸🇬"};
+const NAME = {IN:"India", US:"United States", UK:"United Kingdom", AE:"UAE", SG:"Singapore"};
+const SYM = {INR:"₹", USD:"$", GBP:"£", AED:"AED ", SGD:"S$"};
+const CURS = {INR:"₹", USD:"$", GBP:"£", AED:"AED ", SGD:"S$"};
+const KIND = {showroom:"🏬 Showroom", online:"🛒 Online store"};
+const LABEL = {BUY_LOCAL:"Buy locally", BUY_INTERNATIONAL:"Buy internationally", WAIT:"Wait for a better price", NO_MATCH:"No match"};
+const SAMPLES = ["Sony headphones under 40000", "iPhone 15 within 10 days"];
+let REFRESH = false, cur = null, PREV = {}, liveTimer = null;
+
+async function api(u, o) { const r = await fetch(u, o); return {ok: r.ok, d: await r.json()}; }
+const post = (u, body) => api(u, {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify(body)});
+
+const pimg = p => `<div class="pimg"><span>${p.emoji}</span><img src="/img/${p.slug}" loading="lazy" alt="${p.name}" onerror="this.remove()"></div>`;
+fetch("/api/products").then(r => r.json()).then(list => {
+  $("plist").innerHTML = list.map(p => `<option value="${p.name}">`).join("");
+  $("chips").innerHTML = SAMPLES.map(s => `<button type="button" class="alt">${s}</button>`).join("");
+  $("tiles").innerHTML = list.map(p => `<div class="tile" data-name="${p.name}">${pimg(p)}${p.name}</div>`).join("");
+});
+$("tiles").onclick = e => { const t = e.target.closest(".tile"); if (t) { $("q").value = t.dataset.name; run(); window.scrollTo({top: $("phead").offsetTop - 20, behavior: "smooth"}); } };
+$("chips").onclick = e => { if (e.target.tagName === "BUTTON") { $("q").value = e.target.textContent; run(); } };
+$("f").onsubmit = e => { e.preventDefault(); run(); };
+
+const card = (r, i, v) => `
+  <div class="card ${r.country === v.best_country ? "best" : ""} ${r.late || r.over_budget ? "dim" : ""}">
+    ${r.country === v.best_country ? '<span class="badge">Recommended</span>' : ""}
+    <div class="flag">${FLAG[r.country]}</div><h3>${NAME[r.country]}</h3>
+    <div class="plat"><b>${r.platform.name}</b> · ${KIND[r.platform.kind]}${r.platform.link ? ` <a href="${r.platform.link}" target="_blank" rel="noopener">View product ↗</a>` : ""}</div>
+    <span class="pt ${r.platform.trust >= 85 ? "ok" : "no"}">${r.platform.trust >= 85 ? "✅ Trusted platform" : "⚠ Unverified platform"} · ${r.platform.trust}/100</span>
+    <div class="stars">${"★".repeat(Math.round(r.rating))}${"☆".repeat(5 - Math.round(r.rating))} <b>${r.rating}</b> <span>(${r.reviews.toLocaleString("en-IN")} reviews)</span></div>
+    <span class="tr ${r.trust.level.split(" ")[0].toLowerCase()}">Trust ${r.trust.score}/100 · ${r.trust.level}</span>
+    ${r.trust.flags.map(f => `<div class="fl">⚠ ${f}</div>`).join("")}
+    <div class="row"><span>Store price (listed)</span><span>${SYM[r.currency]}${Number(r.price).toLocaleString("en-IN")}</span></div>
+    <div class="row"><span>Listed price at store</span><span><b>${CURS[r.currency]}${r.price.toLocaleString("en-IN")}</b></span></div>
+    <div class="row"><span>Item + shipping (in ₹)</span><span>${inr(r.landed.base)}</span></div>
+    <div class="row"><span>Currency fee</span><span>${inr(r.landed.fx_fee)}</span></div>
+    <div class="row"><span>Duty and tax (est.)</span><span>${inr(r.landed.duty)}</span></div>
+    <div class="row"><span>Delivery · warranty</span><span>${r.days} days · ${r.warranty} mo</span></div>
+    <div class="row"><span>Expected price trend</span><span>${r.trend_pct > 0 ? "▲" : r.trend_pct < 0 ? "▼" : "–"} ${Math.abs(r.trend_pct)}%</span></div>
+    ${r.late ? '<div class="fl">Too slow for your delivery limit</div>' : ""}${r.over_budget ? '<div class="fl">Over your budget</div>' : ""}
+    <div class="total"><span id="tot-${r.country}">${inr(r.landed.total)}</span><span id="dl-${r.country}"></span></div>
+    <div id="pp-${i}" class="ppbox"></div>
+  </div>`;
+
+async function run() {
+  const q = $("q").value.trim(); if (!q) return;
+  $("msg").textContent = "Analysing sellers…";
+  const {ok, d} = await api("/api/search?q=" + encodeURIComponent(q) + "&real=" + ($("real").checked ? "1" : "0") + (REFRESH ? "&refresh=1" : ""));
+  if (!ok) { $("msg").textContent = d.error; $("grid").innerHTML = ""; $("verdict").style.display = "none"; return; }
+  cur = d; cur.q = q; PREV = Object.fromEntries(d.rows.map(r => [r.country, r.landed.total])); const v = d.verdict;
+  $("phead").style.display = "flex";
+  $("phead").innerHTML = pimg(d) + `<div><h3>${d.product}</h3><p>${d.rows.length} sellers compared across 5 countries${d.live ? " · REAL prices from Google Shopping" : d.estimated ? " · prices AI-estimated" : " · DEMO prices (not real)"}</p>${d.live ? `<p>Checked ${Math.max(0, Math.round((Date.now() / 1000 - d.checked_at) / 60))} min ago · <a href="#" onclick="REFRESH=true;run().then(()=>REFRESH=false);return false">Refresh prices</a></p>` : ""}</div>`;
+  $("msg").textContent = d.product + (d.budget ? " · budget " + inr(d.budget) : "") + " · delivery within " + d.max_days + " days · Listed price = store price. Final cost adds shipping, currency fee and duty (estimates).";
+  $("vd").textContent = LABEL[v.decision]; $("vr").textContent = v.reason + " " + (v.warn || "");
+  $("verdict").style.display = "block"; $("watch").textContent = "Watch this price";
+  $("grid").innerHTML = d.rows.map((r, i) => card(r, i, v)).join("");
+  if (window.paypal) d.rows.forEach((r, i) => paypal.Buttons({
+    createOrder: async () => {
+      const res = await post("/api/orders", {product: d.product, country: r.country, real: !!d.live});
+      if (!res.ok) { alert(res.d.blocked ? "Payment blocked by fraud check:\n- " + res.d.reasons.join("\n- ") : (res.d.error || "Order failed")); throw new Error("blocked"); }
+      return res.d.id;
+    },
+    onApprove: async data => { await api(`/api/orders/${data.orderID}/capture`, {method:"POST"}); alert("Payment successful (sandbox)"); loadTx(); }
+  }).render("#pp-" + i));
+}
+
+$("watch").onclick = async () => { if (!cur) return; await post("/api/watch", {product: cur.product}); $("watch").textContent = "Watching ✓"; loadAlerts(); };
+$("sim").onclick = async () => { if (!cur) return; await post("/api/simulate-drop", {product: cur.product}); loadAlerts(); };
+
+async function loadAlerts() {
+  const {d} = await api("/api/alerts");
+  $("alerts").innerHTML = d.length ? d.map(a => `<div><b>${a.product}</b>: ${NAME[a.country]} seller now ${inr(a.new)}, <span class="drop">down ${inr(a.drop)}</span> from ${inr(a.old)}</div>`).join("") : "No price drops yet for watched products.";
+}
+async function loadTx() {
+  const {d} = await api("/api/transactions");
+  $("tx").innerHTML = d.length ? d.map(t => `<div>${t.time} · ${t.product} from ${NAME[t.country] || ""} · ${inr(t.total_inr || 0)} · ${t.status}</div>`).join("") : "No payments yet.";
+}
+fetch("/api/config").then(r => r.json()).then(c => {
+  if (c.live) $("real").checked = true;      // real prices are the default when a SerpApi key exists
+  $("real").checked = !!c.has_live;
+  if (!c.client_id) return;
+  const s = document.createElement("script");
+  s.src = "https://www.paypal.com/sdk/js?client-id=" + c.client_id + "&currency=USD";
+  document.head.appendChild(s);
+});
+
+async function liveTick() {
+  if (!cur || cur.live) return;      // simulated ticks only for demo prices
+  await post("/api/live-tick", {product: cur.product});
+  const {ok, d} = await api("/api/search?q=" + encodeURIComponent(cur.q) + "&real=0");
+  if (!ok) return;
+  d.rows.forEach(r => {
+    const el = $("tot-" + r.country); if (!el) return;
+    const diff = r.landed.total - (PREV[r.country] ?? r.landed.total);
+    el.textContent = inr(r.landed.total);
+    $("dl-" + r.country).innerHTML = diff ? `<span class="dl ${diff < 0 ? "dn" : "up"}">${diff < 0 ? "▼" : "▲"} ${inr(Math.abs(diff))}</span>` : "";
+    PREV[r.country] = r.landed.total;
+  });
+  $("vd").textContent = LABEL[d.verdict.decision]; $("vr").textContent = d.verdict.reason + " " + (d.verdict.warn || "");
+  loadAlerts();
+}
+$("live").onclick = () => {
+  if (liveTimer) { clearInterval(liveTimer); liveTimer = null; $("live").textContent = "● Live compare: OFF"; $("live").classList.remove("on"); return; }
+  $("live").textContent = "● Live compare: ON (simulated)"; $("live").classList.add("on");
+  liveTick(); liveTimer = setInterval(liveTick, 6000);
+};
+loadAlerts(); loadTx();
+</script>
+</body>
+</html>
